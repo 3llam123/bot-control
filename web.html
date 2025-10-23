@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bot Control Dashboard</title>
   <style>
     body {
       margin: 0;
       font-family: "Segoe UI", sans-serif;
-      background-color: #101018;
+      background-color: #0e0e16;
       color: white;
       display: flex;
     }
 
     .sidebar {
-      width: 250px;
+      width: 240px;
       background-color: #181824;
-      padding: 20px;
       height: 100vh;
-      box-shadow: 2px 0 10px #0005;
+      padding: 20px;
+      box-shadow: 3px 0 10px #0005;
     }
 
     .sidebar h2 {
-      color: #7b6df2;
       text-align: center;
-      margin-bottom: 30px;
+      color: #7b6df2;
     }
 
     .sidebar ul {
       list-style: none;
       padding: 0;
+      margin-top: 30px;
     }
 
     .sidebar ul li {
-      margin: 15px 0;
+      margin: 10px 0;
       padding: 10px;
-      cursor: pointer;
       border-radius: 8px;
+      cursor: pointer;
       transition: 0.2s;
     }
 
@@ -60,7 +60,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px #0005;
       width: 500px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     textarea {
@@ -101,61 +101,69 @@
 <body>
 
   <div class="sidebar">
-    <h2>⚙️ Control Panel</h2>
+    <h2>⚙️ Bot Control</h2>
     <ul>
-      <li class="active">Welcome & Goodbye</li>
-      <li>Auto Roles</li>
-      <li>Logs</li>
+      <li class="active">Welcome & Leave</li>
+      <li>Announcements</li>
     </ul>
   </div>
 
   <div class="main">
-    <h1>Welcome & Goodbye</h1>
+    <h1>Welcome & Leave Messages</h1>
+
     <div class="card">
-      <h3>Send a Welcome Message</h3>
-      <textarea id="welcomeMessage" placeholder="Type your welcome message here..."></textarea>
-      <button id="sendBtn">Send to Bot</button>
+      <h3>Welcome Message</h3>
+      <textarea id="welcomeMessage" placeholder="Type your welcome message... (use {user} for username)"></textarea>
+      <button id="welcomeBtn">Save Welcome Message</button>
     </div>
 
     <div class="card">
-      <h3>Send an Announcement</h3>
-      <textarea id="announceMessage" placeholder="Type your announcement here..."></textarea>
-      <button id="announceBtn">Announce</button>
+      <h3>Leave Message</h3>
+      <textarea id="leaveMessage" placeholder="Type your leave message... (use {user} for username)"></textarea>
+      <button id="leaveBtn">Save Leave Message</button>
     </div>
 
-    <div class="footer">© 2025 YourBot Dashboard</div>
+    <div class="card">
+      <h3>Test Commands</h3>
+      <button id="showBtn">Show Current Settings</button>
+    </div>
+
+    <div class="footer">© 2025 Bot Control Dashboard</div>
   </div>
 
   <script>
-    const webhookURL = "https://discord.com/api/webhooks/1430745600219025513/GSsSdKovmBmwp7G1LeZRUvvzwIYDKiaYXir0maY0LqGpEFm_tKitKWrlom3Jrs_FYj2N"; // 👈 paste your webhook here!
+    // 🔗 Replace this with your Discord webhook URL
+    const webhookURL = "https://discord.com/api/webhooks/1430745600219025513/GSsSdKovmBmwp7G1LeZRUvvzwIYDKiaYXir0maY0LqGpEFm_tKitKWrlom3Jrs_FYj2N";
 
-    // Send Welcome message
-    document.getElementById("sendBtn").addEventListener("click", () => {
+    // Send Welcome message to bot
+    document.getElementById("welcomeBtn").addEventListener("click", () => {
       const msg = document.getElementById("welcomeMessage").value.trim();
-      if (!msg) return alert("Please type a message first!");
+      if (!msg) return alert("Please type a welcome message first!");
+      sendToDiscord(`!setwelcome ${msg}`);
+    });
 
+    // Send Leave message to bot
+    document.getElementById("leaveBtn").addEventListener("click", () => {
+      const msg = document.getElementById("leaveMessage").value.trim();
+      if (!msg) return alert("Please type a leave message first!");
+      sendToDiscord(`!setleave ${msg}`);
+    });
+
+    // Show current settings
+    document.getElementById("showBtn").addEventListener("click", () => {
+      sendToDiscord("!showsettings");
+    });
+
+    // Function to send message via webhook
+    function sendToDiscord(content) {
       fetch(webhookURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: `!say ${msg}` })
+        body: JSON.stringify({ content })
       })
-      .then(() => alert("✅ Sent welcome message!"))
+      .then(() => alert("✅ Sent to bot successfully!"))
       .catch(() => alert("❌ Error sending message."));
-    });
-
-    // Send Announcement
-    document.getElementById("announceBtn").addEventListener("click", () => {
-      const msg = document.getElementById("announceMessage").value.trim();
-      if (!msg) return alert("Please type a message first!");
-
-      fetch(webhookURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: `!announce ${msg}` })
-      })
-      .then(() => alert("✅ Sent announcement!"))
-      .catch(() => alert("❌ Error sending announcement."));
-    });
+    }
   </script>
 
 </body>
