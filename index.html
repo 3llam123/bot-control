@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Discord Bot Control</title>
+  <style>
+    body { background:#111; color:white; font-family:sans-serif; text-align:center; margin-top:100px; }
+    input, button { padding:10px; margin:10px; font-size:16px; width:60%; max-width:400px; }
+    button { background:#7289da; border:none; color:white; cursor:pointer; border-radius:5px; }
+    button:hover { background:#5b6eae; }
+  </style>
+</head>
+<body>
+  <h1>Discord Bot Control Panel</h1>
+  <p>Send a message directly to your server using the bot’s webhook.</p>
+  <input id="msg" placeholder="Enter your message here" />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    // 🔗 Paste your Discord webhook URL here ↓↓↓
+    const webhookURL = "https://discord.com/api/webhooks/PASTE_YOUR_WEBHOOK_HERE";
+
+    async function sendMessage() {
+      const message = document.getElementById("msg").value.trim();
+      if (!message) return alert("Type a message first!");
+      await fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: message })
+      });
+      alert("✅ Message sent!");
+      document.getElementById("msg").value = "";
+    }
+  </script>
+</body>
+</html>
