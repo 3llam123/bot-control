@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bot Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #0e0e16;
+      color: white;
+      padding: 30px;
+    }
+    h1 { color: #7b6df2; }
+    .card {
+      background: #181824;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0005;
+      margin-bottom: 20px;
+      width: 500px;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background: #222232;
+      color: white;
+      border: none;
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 10px;
+      background: #7b6df2;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover { background: #695de0; }
+  </style>
+</head>
+<body>
+
+  <h1>⚙️ Bot Dashboard</h1>
+
+  <div class="card">
+    <h3>Set Welcome Message</h3>
+    <textarea id="welcomeMessage" placeholder="Type your welcome message..."></textarea>
+    <button onclick="sendCommand('!setwelcome', welcomeMessage.value)">Save Welcome</button>
+  </div>
+
+  <div class="card">
+    <h3>Set Leave Message</h3>
+    <textarea id="leaveMessage" placeholder="Type your leave message..."></textarea>
+    <button onclick="sendCommand('!setleave', leaveMessage.value)">Save Leave</button>
+  </div>
+
+  <div class="card">
+    <h3>Add Role</h3>
+    <input id="roleName" placeholder="Role name (e.g., Member)" />
+    <input id="roleColor" placeholder="Color (e.g., #ff0000)" />
+    <button onclick="sendCommand('!setrole', roleName.value + ' ' + roleColor.value)">Add Role</button>
+  </div>
+
+  <div class="card">
+    <button onclick="sendCommand('!showsettings', '')">Show Settings</button>
+  </div>
+
+  <script>
+    const webhookURL = "<YOUR_WEBHOOK_URL>";
+
+    async function sendCommand(command, args) {
+      const content = `${command} ${args}`;
+      try {
+        await fetch(webhookURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content }),
+        });
+        alert("✅ Command sent!");
+      } catch (err) {
+        alert("❌ Failed to send command.");
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
