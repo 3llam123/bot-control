@@ -1,167 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roles Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Role Dashboard</title>
   <style>
     body {
-      background-color: #0e0e16;
+      font-family: Arial, sans-serif;
+      background: #0e0e16;
       color: #fff;
-      font-family: "Segoe UI", sans-serif;
       margin: 0;
+      padding: 0;
       display: flex;
-      height: 100vh;
     }
-
     .sidebar {
-      width: 230px;
-      background-color: #181824;
+      background: #181824;
+      width: 220px;
+      height: 100vh;
       padding: 20px;
       box-shadow: 3px 0 10px #0005;
     }
-
-    .sidebar h2 {
-      color: #7b6df2;
-      text-align: center;
-    }
-
+    .sidebar h2 { color: #7b6df2; text-align: center; }
     .main {
       flex: 1;
       padding: 40px;
-      overflow-y: auto;
     }
-
-    h1 {
-      color: #7b6df2;
-      font-size: 26px;
-      margin-bottom: 20px;
-    }
-
-    .card {
-      background-color: #181824;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #0005;
-      margin-bottom: 20px;
-    }
-
-    .card h3 {
-      margin: 0 0 15px;
-    }
-
-    input, select {
-      background-color: #222232;
-      color: white;
-      border: none;
+    h1 { color: #7b6df2; }
+    input, button {
+      padding: 10px;
       border-radius: 8px;
-      padding: 8px;
-      width: 100%;
-      margin-top: 8px;
-    }
-
-    .btn {
-      background-color: #7b6df2;
-      color: white;
       border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
+      margin: 5px;
+    }
+    input { width: 200px; }
+    button {
+      background: #7b6df2;
+      color: white;
       cursor: pointer;
       transition: 0.2s;
-      margin-top: 10px;
     }
-
-    .btn:hover {
-      background-color: #695de0;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 8px;
-      background-color: #222232;
-    }
-
-    th {
-      background-color: #27273a;
-    }
-
-    .delete {
-      color: #ff6b6b;
-      cursor: pointer;
+    button:hover { background: #6a5ff0; }
+    .roles {
+      margin-top: 20px;
+      background: #181824;
+      padding: 20px;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
 
   <div class="sidebar">
-    <h2>⚙️ Roles</h2>
+    <h2>⚙️ Bot Control</h2>
+    <p>Manage roles</p>
   </div>
 
   <div class="main">
-    <h1>Server Roles</h1>
+    <h1>Roles Dashboard</h1>
 
-    <div class="card">
-      <h3>Add Role</h3>
-      <input id="roleName" placeholder="Role Name">
-      <input id="roleColor" placeholder="Color (e.g. #ff0000)">
-      <button class="btn" onclick="addRole()">Add Role</button>
+    <div>
+      <input id="roleName" placeholder="Role name" />
+      <input id="roleColor" placeholder="#color" value="#ffffff" />
+      <button id="addRole">Add Role</button>
+      <button id="listRoles">List Roles</button>
     </div>
 
-    <div class="card">
-      <h3>Existing Roles</h3>
-      <table id="rolesTable">
-        <thead>
-          <tr><th>Name</th><th>Color</th><th>Actions</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+    <div class="roles" id="roles"></div>
   </div>
 
   <script>
-    // Mock data (later this will come from database.json)
-    let roles = [
-      { name: "Member", color: "#00ff88" },
-      { name: "Admin", color: "#ff0000" },
-      { name: "Bot", color: "#7289da" }
-    ];
+    const webhookURL = "https://discord.com/api/webhooks/1431142245326651393/Cd5J_yR64157z5FaU2I6KS5QYhGN7gC3sdNe2io3xOvUwpALc8w2TC1rZNBpUxHQInjx";
 
-    function renderRoles() {
-      const tbody = document.querySelector("#rolesTable tbody");
-      tbody.innerHTML = "";
-      roles.forEach((role, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${role.name}</td>
-          <td><span style="color:${role.color}">${role.color}</span></td>
-          <td><span class="delete" onclick="deleteRole(${index})">🗑️ Delete</span></td>
-        `;
-        tbody.appendChild(row);
+    async function sendCommand(cmd) {
+      await fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: cmd })
       });
+      alert("✅ Command sent to bot!");
     }
 
-    function addRole() {
-      const name = document.getElementById("roleName").value.trim();
-      const color = document.getElementById("roleColor").value.trim() || "#ffffff";
-      if (!name) return alert("Please enter a role name!");
-      roles.push({ name, color });
-      renderRoles();
-      document.getElementById("roleName").value = "";
-      document.getElementById("roleColor").value = "";
-    }
+    document.getElementById("addRole").addEventListener("click", () => {
+      const name = document.getElementById("roleName").value;
+      const color = document.getElementById("roleColor").value;
+      if (!name) return alert("Enter role name!");
+      const data = JSON.stringify({ name, color });
+      sendCommand(`!addrole ${data}`);
+    });
 
-    function deleteRole(index) {
-      roles.splice(index, 1);
-      renderRoles();
-    }
-
-    renderRoles();
+    document.getElementById("listRoles").addEventListener("click", () => {
+      sendCommand("!roles");
+    });
   </script>
+
 </body>
 </html>
