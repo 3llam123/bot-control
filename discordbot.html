@@ -1,66 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bot Control Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roles Dashboard</title>
   <style>
     body {
-      margin: 0;
-      font-family: "Segoe UI", sans-serif;
       background-color: #0e0e16;
       color: #fff;
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
       display: flex;
       height: 100vh;
-      overflow: hidden;
     }
 
-    /* Sidebar */
     .sidebar {
-      width: 250px;
+      width: 230px;
       background-color: #181824;
-      display: flex;
-      flex-direction: column;
-      padding: 20px 0;
+      padding: 20px;
       box-shadow: 3px 0 10px #0005;
     }
 
     .sidebar h2 {
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 25px;
       color: #7b6df2;
+      text-align: center;
     }
 
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      flex: 1;
-    }
-
-    .sidebar ul li {
-      display: flex;
-      align-items: center;
-      padding: 10px 20px;
-      color: #ccc;
-      cursor: pointer;
-      transition: 0.2s;
-      font-size: 15px;
-    }
-
-    .sidebar ul li:hover,
-    .sidebar ul li.active {
-      background-color: #27273a;
-      color: #fff;
-    }
-
-    .sidebar ul li i {
-      margin-right: 12px;
-      font-size: 18px;
-    }
-
-    /* Main content */
     .main {
       flex: 1;
       padding: 40px;
@@ -69,174 +34,134 @@
 
     h1 {
       color: #7b6df2;
-      font-size: 28px;
-      margin-bottom: 15px;
-    }
-
-    .warning {
-      background-color: #3c2e2e;
-      color: #ffae5b;
-      padding: 10px;
-      border-radius: 8px;
+      font-size: 26px;
       margin-bottom: 20px;
-      font-size: 14px;
-      border-left: 4px solid #ffae5b;
     }
 
-    /* Module Card */
     .card {
       background-color: #181824;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px #0005;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .card h3 {
-      margin-top: 0;
-      color: #7b6df2;
+      margin: 0 0 15px;
     }
 
-    /* Toggle Switch */
-    .toggle {
-      position: relative;
-      width: 50px;
-      height: 26px;
+    input, select {
+      background-color: #222232;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px;
+      width: 100%;
+      margin-top: 8px;
     }
 
-    .toggle input {
-      display: none;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #444;
-      border-radius: 26px;
-      transition: 0.3s;
-    }
-
-    .slider:before {
-      content: "";
-      position: absolute;
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      border-radius: 50%;
-      transition: 0.3s;
-    }
-
-    input:checked + .slider {
-      background-color: #7b6df2;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(24px);
-    }
-
-    /* Button */
     .btn {
       background-color: #7b6df2;
-      color: #fff;
+      color: white;
       border: none;
       padding: 8px 15px;
       border-radius: 8px;
       cursor: pointer;
       transition: 0.2s;
+      margin-top: 10px;
     }
 
     .btn:hover {
       background-color: #695de0;
     }
 
-    .footer {
-      color: #666;
-      text-align: center;
-      font-size: 12px;
-      margin-top: 40px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
     }
 
-    /* Input Row */
-    .input-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    select, input {
-      background-color: #222232;
-      border: none;
-      border-radius: 8px;
-      color: white;
+    th, td {
+      text-align: left;
       padding: 8px;
+      background-color: #222232;
+    }
+
+    th {
+      background-color: #27273a;
+    }
+
+    .delete {
+      color: #ff6b6b;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+
   <div class="sidebar">
-    <h2>⚙️ Bot Panel</h2>
-    <ul>
-      <li class="active"><i>🧩</i> Dashboard</li>
-      <li><i>🎭</i> Auto Roles</li>
-      <li><i>🛠️</i> Moderation</li>
-      <li><i>📢</i> Announcements</li>
-      <li><i>⚡</i> Utility</li>
-    </ul>
+    <h2>⚙️ Roles</h2>
   </div>
 
   <div class="main">
-    <h1>Auto Roles</h1>
-    <div class="warning">
-      ⚠️ When the Discord rule-screen panel is activated, new users must accept the rules before they can receive the auto-role.
-      Also ensure assigned roles don’t have admin permissions.
+    <h1>Server Roles</h1>
+
+    <div class="card">
+      <h3>Add Role</h3>
+      <input id="roleName" placeholder="Role Name">
+      <input id="roleColor" placeholder="Color (e.g. #ff0000)">
+      <button class="btn" onclick="addRole()">Add Role</button>
     </div>
 
     <div class="card">
-      <div class="input-row">
-        <label>AUTO ROLE ENABLED</label>
-        <label class="toggle">
-          <input type="checkbox" id="toggleAutoRole" checked />
-          <span class="slider"></span>
-        </label>
-      </div>
-
-      <div style="margin-top: 15px;">
-        <label>Role for Members:</label><br />
-        <select id="memberRole">
-          <option>Member</option>
-          <option>Verified</option>
-          <option>Player</option>
-        </select>
-      </div>
-
-      <div style="margin-top: 15px;">
-        <label>Role for Bots:</label><br />
-        <select id="botRole">
-          <option>bot</option>
-          <option>system</option>
-        </select>
-      </div>
-
-      <button class="btn" style="margin-top: 15px;" onclick="saveSettings()">💾 Save Settings</button>
+      <h3>Existing Roles</h3>
+      <table id="rolesTable">
+        <thead>
+          <tr><th>Name</th><th>Color</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
-
-    <div class="footer">© 2025 Bot Dashboard | Designed by Adoom</div>
   </div>
 
   <script>
-    function saveSettings() {
-      const autoRole = document.getElementById('toggleAutoRole').checked;
-      const member = document.getElementById('memberRole').value;
-      const bot = document.getElementById('botRole').value;
-      alert(`✅ Saved!\nAuto Role: ${autoRole ? 'Enabled' : 'Disabled'}\nMember Role: ${member}\nBot Role: ${bot}`);
+    // Mock data (later this will come from database.json)
+    let roles = [
+      { name: "Member", color: "#00ff88" },
+      { name: "Admin", color: "#ff0000" },
+      { name: "Bot", color: "#7289da" }
+    ];
+
+    function renderRoles() {
+      const tbody = document.querySelector("#rolesTable tbody");
+      tbody.innerHTML = "";
+      roles.forEach((role, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${role.name}</td>
+          <td><span style="color:${role.color}">${role.color}</span></td>
+          <td><span class="delete" onclick="deleteRole(${index})">🗑️ Delete</span></td>
+        `;
+        tbody.appendChild(row);
+      });
     }
+
+    function addRole() {
+      const name = document.getElementById("roleName").value.trim();
+      const color = document.getElementById("roleColor").value.trim() || "#ffffff";
+      if (!name) return alert("Please enter a role name!");
+      roles.push({ name, color });
+      renderRoles();
+      document.getElementById("roleName").value = "";
+      document.getElementById("roleColor").value = "";
+    }
+
+    function deleteRole(index) {
+      roles.splice(index, 1);
+      renderRoles();
+    }
+
+    renderRoles();
   </script>
 </body>
 </html>
